@@ -93,6 +93,7 @@ class StorageConan(ConanFile):
         self.requires("benchmark/1.7.0")
         self.requires("google-cloud-cpp/2.5.0@milvus/2.4#c5591ab30b26b53ea6068af6f07128d3")
         self.requires("googleapis/cci.20221108#65604e1b3b9a6b363044da625b201a2a")
+        self.requires("aws-sdk-cpp/1.11.352#f1ee18b381833da356f2e023f34f0d63")
         if self.options.with_ut:
             self.requires("gtest/1.13.0")
         if self.settings.os == "Macos":

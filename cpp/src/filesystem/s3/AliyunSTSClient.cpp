@@ -31,6 +31,7 @@
 #include <sstream>
 #include <random>
 #include "milvus-storage/filesystem/s3/AliyunSTSClient.h"
+#include <aws/core/client/ClientConfiguration.h>
 
 namespace Aws {
 namespace Http {
@@ -39,9 +40,6 @@ class HttpRequest;
 enum class HttpResponseCode;
 }  // namespace Http
 
-namespace Client {
-Aws::String ComputeUserAgentString();
-}
 
 namespace Internal {
 
