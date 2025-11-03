@@ -961,7 +961,7 @@ void FileObjectToInfo(const S3Model::Object& obj, FileInfo* info) {
   info->set_size(static_cast<int64_t>(obj.GetSize()));
   info->set_mtime(FromAwsDatetime(obj.GetLastModified()));
 }
-
+//hc---custom output stream
 class CustomOutputStream final : public arrow::io::OutputStream {
   protected:
   struct UploadState;
@@ -1294,7 +1294,7 @@ class CustomOutputStream final : public arrow::io::OutputStream {
     ARROW_ASSIGN_OR_RAISE(auto client_lock, holder->Lock());
     return client_lock.Move()->UploadPart(request);
   }
-
+  //hc---truly upload data to s3
   template <typename RequestType, typename OutcomeType>
   arrow::Status Upload(RequestType&& req,
                        UploadResultCallbackFunction<RequestType, OutcomeType> sync_result_callback,
@@ -1419,7 +1419,7 @@ class CustomOutputStream final : public arrow::io::OutputStream {
       HandleUploadPartOutcome(state, part_number, request, outcome);
       return Status::OK();
     };
-
+    //hc---truly upload data to s3
     return Upload<Aws::S3::Model::UploadPartRequest, Aws::S3::Model::UploadPartOutcome>(
         std::move(req), std::move(sync_result_callback), std::move(async_result_callback), data, nbytes,
         std::move(owned_buffer));
@@ -2566,7 +2566,7 @@ arrow::Status MultiPartUploadS3FS::CopyFile(const std::string& src, const std::s
   }
   return impl_->CopyObject(src_path, dest_path);
 }
-
+//hc---return a new output stream
 arrow::Result<std::shared_ptr<arrow::io::OutputStream>> MultiPartUploadS3FS::OpenOutputStreamWithUploadSize(
     const std::string& s, int64_t upload_size) {
   return OpenOutputStreamWithUploadSize(s, std::shared_ptr<const arrow::KeyValueMetadata>{}, upload_size);
@@ -2579,7 +2579,7 @@ arrow::Result<std::shared_ptr<arrow::io::OutputStream>> MultiPartUploadS3FS::Ope
   RETURN_NOT_OK(ValidateFilePath(path));
 
   RETURN_NOT_OK(CheckS3Initialized());
-
+  //hc---return custom output stream
   auto ptr =
       std::make_shared<CustomOutputStream>(impl_->holder_, io_context(), path, impl_->options(), metadata, upload_size);
   RETURN_NOT_OK(ptr->Init());

@@ -60,6 +60,8 @@ Status PackedRecordBatchReader::init(std::shared_ptr<arrow::fs::FileSystem> fs,
   RETURN_NOT_OK(schemaMatching(fs, schema, paths));
 
   // init arrow file readers and metadata list
+  //arrow file reader
+  // hc---arrow file reader in inited here
   for (auto path : needed_paths_) {
     auto result = MakeArrowFileReader(*fs, path, reader_props);
     if (!result.ok()) {

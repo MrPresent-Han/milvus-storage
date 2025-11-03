@@ -54,7 +54,7 @@ Status ParquetFileWriter::Init() {
   } else {
     ASSIGN_OR_RETURN_ARROW_NOT_OK(sink, fs_->OpenOutputStream(file_path_));
   }
-
+  //hc---sink here
   ASSIGN_OR_RETURN_ARROW_NOT_OK(
       auto writer, parquet::arrow::FileWriter::Open(*schema_, arrow::default_memory_pool(), sink, writer_props_));
 
@@ -70,11 +70,12 @@ Status ParquetFileWriter::Write(const arrow::RecordBatch& record) {
 }
 
 Status ParquetFileWriter::WriteTable(const arrow::Table& table) {
+  //hc---write parquet files here
   RETURN_ARROW_NOT_OK(writer_->WriteTable(table));
   count_ += table.num_rows();
   return Status::OK();
 }
-
+//hc---write files here
 Status ParquetFileWriter::WriteRecordBatches(const std::vector<std::shared_ptr<arrow::RecordBatch>>& batches,
                                              const std::vector<size_t>& batch_memory_sizes) {
   auto WriteRowGroup = [&](const std::vector<std::shared_ptr<arrow::RecordBatch>>& batch, size_t group_size) -> Status {
@@ -111,6 +112,7 @@ Status ParquetFileWriter::WriteRecordBatches(const std::vector<std::shared_ptr<a
 int64_t ParquetFileWriter::count() { return count_; }
 
 void ParquetFileWriter::AppendKVMetadata(const std::string& key, const std::string& value) {
+  //hc--- kv meta towhere
   kv_metadata_->Append(key, value);
 }
 
